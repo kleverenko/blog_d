@@ -1,6 +1,5 @@
 """
 URL configuration for core project.
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
 Examples:
@@ -15,17 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls.static import static 
+from django.conf import settings
 from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="Shop API",
       default_version='v1',
-      description="Test description",
+      description="API для Интернет-магазина",
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="contact@snippets.local"),
       license=openapi.License(name="BSD License"),
@@ -39,4 +39,14 @@ urlpatterns = [
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
+    path('', include('apps.product.urls')),
+    path('', include('apps.category.urls')),
+    path('', include('apps.order.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,
+    document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, 
+    document_root=settings.MEDIA_ROOT)
+                          
